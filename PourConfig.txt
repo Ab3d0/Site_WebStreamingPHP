@@ -1,0 +1,22 @@
+Dans application/config/config.php :
+	--> ligne n°26 : 
+		remplacer $config['base_url'] = '/MusicApp/' par
+			$config['base_url'] = '/~login/dossier_où_se_trouve_CodeIgniter'
+
+
+
+
+
+
+Dans application/config/database.php :
+	--> ligne 78 à 81 : il s'agit des logins de MA base de donnée qui se trouve sur mon PC mais pour des soucis d'organisation il faudra choisir le compte de celui qui "hébergera" la base de donnée pour qu'on ai pas à changer les identifiants de connexion tout le temps, donc :
+	--> ligne 78 : laisser "localhost" normalement.
+	--> ligne 79 : mettre le login d'un de nous 3 qui a la base de donnée
+	--> ligne 80 : mot de passe de la personne qui a la base de donnée sur son compte
+	--> ligne 81 : nom de la base de donnée (chez moi c'est SAE mais peut être pas sur les serveurs de dwarves)
+
+
+
+Le reste est configuré pour que dès que vous lancer le dossier où se trouve CodeIgniter ça mette le site directement par défaut index.php/album/
+
+ 
