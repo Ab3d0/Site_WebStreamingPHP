@@ -16,6 +16,10 @@ Dans application/config/database.php :
 	--> ligne 81 : nom de la base de donnée (chez moi c'est SAE mais peut être pas sur les serveurs de dwarves)
 
 
+J'ai ajouté un fichier sae.sql pour que vous puissiez importer la même base de donnée car j'ai ajouté quelques tables par rapport à celui du prof.
+
+
+
 
 Le reste est configuré pour que dès que vous lancer le dossier où se trouve CodeIgniter ça mette le site directement par défaut index.php/album/
 
