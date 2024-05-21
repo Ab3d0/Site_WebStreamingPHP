@@ -1,0 +1,15 @@
+.action{
+	text-align : right;
+}
+
+.action a {
+	margin-right : 1rem;
+}
+
+body {
+	padding : 2rem;
+}
+
+.articleAlbum {
+	background-color: red;
+}
