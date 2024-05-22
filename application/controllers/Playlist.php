@@ -99,4 +99,14 @@ class Playlist extends CI_Controller {
 	}
 
 
+	public function createPlaylist(){
+		$this->load->view('layout/header');
+		$this->load->view('create_playlist');
+		$this->load->view('layout/footer');
+	}
+
+	public function creationPlaylist(){
+		
+	}
+
 }

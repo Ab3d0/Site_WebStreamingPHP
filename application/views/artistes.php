@@ -5,14 +5,14 @@
 	<li><strong>Music App</strong></li>
   </ul>
 	<ul>
-		<li><?=anchor("album/?choice=album",'Albums',['role'=>($choice=='album'?'button':'')])?></li>
-		<li><?=anchor("artiste/?choice=artiste",'Artistes',['role'=>($choice=='artiste'?'button':'')])?></li>
-		<li><?=anchor("playlist/?choice=playlist",'Playlists',['role'=>($choice=='playlist'?'button':'')])?></li>
+		<li><?=anchor("album/",'Albums',['role'=>($choice=='album'?'button':'')])?></li>
+		<li><?=anchor("artiste/",'Artistes',['role'=>($choice=='artiste'?'button':'')])?></li>
+		<li><?=anchor("playlist/",'Playlists',['role'=>($choice=='playlist'?'button':'')])?></li>
 	</ul>
 </nav>
 <nav>
   	<ul>
-	  	<li><?=anchor("artiste/?choice=$choice&filter=all",'All',['role'=>($filter=='all'?'button':'')])?></li>
+	  	<li><?=anchor("artiste/?filter=all",'All',['role'=>($filter=='all'?'button':'')])?></li>
 		<?php
 			if(  isset($_GET['filter']) ){
 				if( $_GET['filter'] == 'triaz'){
@@ -30,7 +30,7 @@
 				$f_actuel = 'triaz';
 			}
 		?>
-		<li><?=anchor("artiste/?choice=$choice&filter=$f_proch","$f_proch",['role'=>($filter=="$f_actuel"?'button':'')])?></li>
+		<li><?=anchor("artiste/?filter=$f_proch","$f_proch",['role'=>($filter=="$f_actuel"?'button':'')])?></li>
   	</ul>
 </nav>
 

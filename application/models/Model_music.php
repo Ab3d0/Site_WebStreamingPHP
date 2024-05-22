@@ -34,11 +34,11 @@ class Model_music extends CI_Model {
 	public function getPlaylists($filter='all')
 	{
 		if ($filter == 'all')
-			$query = $this->db->query("SELECT * FROM artist");
+			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com'");
 		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT * FROM artist ORDER BY name ASC");
+			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com' ORDER BY name ASC");
 		if ($filter == 'triza')
-			$query = $this->db->query("SELECT * FROM artist ORDER BY name DESC");
+			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com' ORDER BY name DESC");
 
 		return $query->result();
 	}
@@ -86,6 +86,11 @@ class Model_music extends CI_Model {
 				);
 			}
 		session_destroy();
+	}
+
+	public function getSongs($id){
+		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName,song.name AS songName FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
+		return $query->result();
 	}
 	
 
