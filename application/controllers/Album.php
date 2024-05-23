@@ -30,8 +30,8 @@ class Album extends CI_Controller {
 	}
 
 
-	public function view(){
-		$musics = $this->model_music->getSongs($this->numAlbum);
+	public function view($id){
+		$musics = $this->model_music->getSongs($id);
 		$this->load->view('layout/header');
 		$this->load->view('track',['albums'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
 		$this->load->view('layout/footer');

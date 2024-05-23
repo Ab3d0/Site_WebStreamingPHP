@@ -22,11 +22,11 @@ class Model_music extends CI_Model {
 	public function getArtistes($filter='all')
 	{
 		if ($filter == 'all')
-			$query = $this->db->query("SELECT * FROM artist");
+			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name");
 		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT * FROM artist ORDER BY name ASC");
+			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name ASC");
 		if ($filter == 'triza')
-			$query = $this->db->query("SELECT * FROM artist ORDER BY name DESC");
+			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name DESC");
 
 		return $query->result();
 	}
@@ -91,6 +91,26 @@ class Model_music extends CI_Model {
 	public function getSongs($id){
 		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName,song.name AS songName FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
 		return $query->result();
+	}
+
+	public function getAlbumsArtistes($id){
+		$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.artistId = $id");
+
+		return $query->result();
+	}
+
+	public function getIdUser($email){
+		$query = $this->db->query("SELECT id FROM user WHERE email = '$email'");
+		$res = $query->result();
+		foreach($res as $row){
+			$identifiant = $row->id;
+		}
+
+		return $identifiant;
+	}
+
+	public function addPlaylist($id, $name){
+		$query = $this->db->query("INSERT INTO playlist (userid, name) VALUES($id, '$name')");
 	}
 	
 

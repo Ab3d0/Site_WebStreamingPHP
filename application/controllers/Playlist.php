@@ -100,13 +100,31 @@ class Playlist extends CI_Controller {
 
 
 	public function createPlaylist(){
-		$this->load->view('layout/header');
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('name', 'Nom', 'required');
+
+
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view('layout/header');
+			$this->load->view('create_playlist');
+			$this->load->view('layout/footer');
+		} else {
+			session_start();
+			$idUser = $this->model_music->getIdUser($_SESSION['user_session']);
+			/* fonction qui ajoute dans la bdd la playlist vide */
+			$this->model_music->addPlaylist($idUser, $this->input->post("name"));
+
+			$this->index();
+		}
+
+
+
+
+
+
+		/* $this->load->view('layout/header');
 		$this->load->view('create_playlist');
-		$this->load->view('layout/footer');
+		$this->load->view('layout/footer'); */
 	}
-
-	public function creationPlaylist(){
-		
-	}
-
 }

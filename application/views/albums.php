@@ -42,7 +42,7 @@
 		echo "<article>";
 			?>
 			
-			<?=anchor("album/view/?numAlbum=$album->albumId","{$album->albumName}")?>
+			<?=anchor("album/view/$album->albumId","{$album->albumName}")?>
 			<?php
 			echo '<img src="data:image/jpeg;base64,'.base64_encode($album->coverJpeg).'" />';
 			echo "<p>{$album->year}</p>";

@@ -11,26 +11,23 @@
 	</ul>
 </nav>
 
-<nav>
-	<ul>
-		<li><?=anchor("playlist/createPlaylist",'Créer une playlist')?></li>
-	</ul>
-</nav>
-
-
-<?php
-	foreach($playlists as $playlist){
-		echo "<article>";
-			echo "<p>{$playlist->name}</p>";
-		echo "</article>";
-	}
-?>
-
-
-
 
 
 <section>
+<?php
+	foreach($songs as $song){
+		echo "<article>";
+			?>
+			
+			<?=anchor("album/view/?numAlbum=$song->albumId","{$song->albumName}")?>
+			<?php
+			echo '<img src="data:image/jpeg;base64,'.base64_encode($song->coverJpeg).'" />';
+			echo "<p>{$song->year}</p>";
+			echo "<p>{$song->artistName}</p>";
+		echo "</article>";
+	}
+
+?>
 </section>
 
 

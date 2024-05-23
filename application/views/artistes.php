@@ -40,8 +40,12 @@
 <?php
 	foreach($artistes as $artiste){
 		echo "<article>";
-			echo "<p>{$artiste->name}</p>";
-			echo "<p>{$artiste->id}</p>";
+			echo "<p>nombres d'albums</p>";
+			echo "<p>$artiste->nombre_albums</p>";
+		?>
+			
+			<?=anchor("artiste/view/$artiste->id","{$artiste->name}")?>
+			<?php
 
 
 

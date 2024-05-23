@@ -1,5 +1,5 @@
 <?=validation_errors(); ?>
-<?=form_open('playlist/creationPlaylist')?>
+<?=form_open('playlist/createPlaylist')?>
   <!-- Grid -->
   <div class="grid">
 
