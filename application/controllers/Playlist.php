@@ -21,10 +21,11 @@ class Playlist extends CI_Controller {
 
     public function index()
 	{
-		session_start();
-		//echo "{$_SESSION['user_session']}";
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
 		if(isset($_SESSION["user_session"])){
-			$musics = $this->model_music->getPlaylists($this->filter);
+			$musics = $this->model_music->getPlaylists($_SESSION["user_session"], $this->filter);
 			$this->load->view('layout/header');
 			$this->load->view('playlists',['playlists'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
 			$this->load->view('layout/footer');
@@ -117,14 +118,25 @@ class Playlist extends CI_Controller {
 
 			$this->index();
 		}
-
-
-
-
-
-
-		/* $this->load->view('layout/header');
-		$this->load->view('create_playlist');
-		$this->load->view('layout/footer'); */
 	}
+
+
+	public function view($id){
+		/* variable = methode qui récup les sons d'une playlist */
+		$songs = $this->model_music->getSongsOfPlaylist($id);
+		$this->load->view('layout/header');
+		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice]);
+		$this->load->view('layout/footer');
+	}
+
+	public function deconnect(){
+		session_start();
+		$this->model_music->destroySession();
+		redirect('playlist');
+	}
+
+
+
+
+
 }

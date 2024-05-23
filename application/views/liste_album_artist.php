@@ -19,7 +19,7 @@
 		echo "<article>";
 			?>
 			
-			<?=anchor("album/view/?numAlbum=$song->albumId","{$song->albumName}")?>
+			<?=anchor("album/view/$song->albumId","{$song->albumName}")?>
 			<?php
 			echo '<img src="data:image/jpeg;base64,'.base64_encode($song->coverJpeg).'" />';
 			echo "<p>{$song->year}</p>";

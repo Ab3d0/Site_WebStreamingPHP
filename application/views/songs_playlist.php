@@ -10,40 +10,26 @@
 		<li><?=anchor("playlist",'Playlists',['role'=>($choice=='playlist'?'button':'')])?></li>
 	</ul>
 </nav>
-
 <nav>
-	<ul>
-		<li><?=anchor("playlist/createPlaylist",'Créer une playlist')?></li>
-		<li><?=anchor("playlist/deconnect",'Se deconnecter')?></li>
-	</ul>
+  	<ul>
+        <li><?=anchor("playlist", "Ajouter une musique")?></li>
+        <li><?=anchor("playlist", "Supprimer la playlist")?></li>
+  	</ul>
 </nav>
 
-
-<?php
-	foreach($playlists as $playlist){
-		echo "<article>";
-		?>
-		<?=anchor("playlist/view/$playlist->id","$playlist->name")?>
-		<?php
-		echo "</article>";
-	}
-?>
-
-
-
-
-
 <section>
+<?php
+	foreach($songs as $song){
+		echo "<li>";
+            echo "$song->name <br/>";
+            ?>
+            <?=anchor("playlist", "Supprimer le son")?>
+            <?php
+		echo "</li>";
+	}
+
+?>
 </section>
 
 
-
-
-
-
-
-
-
-
-
-  </article>
+</article>

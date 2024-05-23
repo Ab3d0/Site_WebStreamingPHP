@@ -31,14 +31,14 @@ class Model_music extends CI_Model {
 		return $query->result();
 	}
 
-	public function getPlaylists($filter='all')
+	public function getPlaylists($email, $filter='all')
 	{
 		if ($filter == 'all')
-			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com'");
+			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email'");
 		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com' ORDER BY name ASC");
+			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email' ORDER BY name ASC");
 		if ($filter == 'triza')
-			$query = $this->db->query("SELECT playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = 'dubreuil.christopher13@gmail.com' ORDER BY name DESC");
+			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email' ORDER BY name DESC");
 
 		return $query->result();
 	}
@@ -111,6 +111,12 @@ class Model_music extends CI_Model {
 
 	public function addPlaylist($id, $name){
 		$query = $this->db->query("INSERT INTO playlist (userid, name) VALUES($id, '$name')");
+	}
+
+	public function getSongsOfPlaylist($id){
+		$query = $this->db->query("SELECT song.name FROM playlistsong JOIN song ON playlistsong.songId = song.id WHERE playlistId = $id");
+
+		return $query->result();
 	}
 	
 
