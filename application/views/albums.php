@@ -16,6 +16,25 @@
 		<li><?=anchor("album/index/tri","Trier",['role'=>($filter=="tri"?'button':'')])?></li>
   	</ul>
 </nav>
+<nav>
+	<ul>
+		<form action="">
+			<input type="text" id="name-album" name="name" placeholder="Rechercher" value="<?=set_value('name')?>" required>
+			<button type='submit'>Rechercher un album</button>
+		</form>
+		<form action="">
+		<select name="genre" id="genre-select">
+			<?php
+				foreach($genres as $genre){
+					echo "<option value='$genre->id'>$genre->name</option>";
+				}
+				echo "</select>";
+				echo "<button type='submit'>Rechercher un genre</button>";
+			?>
+		</form>
+	</ul>
+
+</nav>
 
 
 

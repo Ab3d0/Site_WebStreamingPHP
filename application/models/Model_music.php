@@ -7,14 +7,23 @@ class Model_music extends CI_Model {
 		$this->load->database();
 	}
 
-    public function getAlbums($filter='all')
+    public function getAlbums($filter='all', $genre, $name)
 	{
-		if ($filter == 'all')
-			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid");
-		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid ORDER BY albumName ASC");
-		if ($filter == 'triza')
-			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid ORDER BY albumName DESC");
+		if($genre == 'none' && $name == 'none'){
+			if ($filter == 'all')
+				$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid");
+			if ($filter == 'triaz')
+				$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid ORDER BY albumName ASC");
+			if ($filter == 'triza')
+				$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid ORDER BY albumName DESC");
+		} else if($genre != 'none'){
+			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.genreId = $genre");
+		} else if($name != 'none'){
+			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.name = '$name'");
+		}
+
+
+
 
 		return $query->result();
 	}
@@ -140,6 +149,13 @@ class Model_music extends CI_Model {
 	
 	public function removePlaylist($id){
 		$query = $this->db->query("DELETE FROM playlist WHERE id = $id");
+	}
+
+
+	public function getGenres(){
+		$query = $this->db->query("SELECT id, name FROM genre");
+		return $query->result();
+
 	}
 
 }

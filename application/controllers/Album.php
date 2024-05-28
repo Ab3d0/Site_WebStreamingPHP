@@ -3,8 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Album extends CI_Controller {
     public $choice = 'album';
-	public $filter = 'all';
 	public $numAlbum = '1';
+	public $genre = 'none';
+	public $nameAlbum = 'none';
 
     public function __construct()
 	{
@@ -18,6 +19,8 @@ class Album extends CI_Controller {
 
 		$this->choice = $this->input->get('choice') ?? 'album';
 		$this->numAlbum = $this->input->get('numAlbum') ?? '1';
+		$this->genre = $this->input->get("genre") ?? 'none';
+		$this->nameAlbum = $this->input->get("name") ?? 'none';
 	}
 
 
@@ -41,9 +44,10 @@ class Album extends CI_Controller {
 				}
 			}
 		}
-		$musics = $this->model_music->getAlbums($_SESSION["sort"]);
+		$musics = $this->model_music->getAlbums($_SESSION["sort"], $this->genre, $this->nameAlbum);
+		$genres = $this->model_music->getGenres();
 		$this->load->view('layout/header');
-		$this->load->view('albums',['albums'=>$musics,'filter'=>$f, 'choice'=>$this->choice]);
+		$this->load->view('albums',['albums'=>$musics,'filter'=>$f, 'choice'=>$this->choice, "genres"=>$genres]);
 		$this->load->view('layout/footer');
 	}
 
@@ -51,7 +55,7 @@ class Album extends CI_Controller {
 	public function view($id){
 		$musics = $this->model_music->getSongs($id);
 		$this->load->view('layout/header');
-		$this->load->view('track',['albums'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
+		$this->load->view('track',['albums'=>$musics, 'choice'=>$this->choice]);
 		$this->load->view('layout/footer');
 	}
 
