@@ -12,25 +12,8 @@
 </nav>
 <nav>
   	<ul>
-	  	<li><?=anchor("album/?filter=all",'All',['role'=>($filter=='all'?'button':'')])?></li>
-		<?php
-			if(  isset($_GET['filter']) ){
-				if( $_GET['filter'] == 'triaz'){
-					$f_proch = 'triza';
-					$f_actuel = 'triaz';
-				} else if( $_GET["filter"] == 'triza'){
-					$f_proch = 'triaz';
-					$f_actuel = 'triza';
-				} else {
-					$f_proch = 'triaz';
-					$f_actuel = 'triaz';
-				}
-			} else {
-				$f_proch = 'triaz';
-				$f_actuel = 'triaz';
-			}
-		?>
-		<li><?=anchor("album/?filter=$f_proch","$f_proch",['role'=>($filter=="$f_actuel"?'button':'')])?></li>
+	  	<li><?=anchor("album/index/all",'All',['role'=>($filter=='all'?'button':'')])?></li>
+		<li><?=anchor("album/index/tri","Trier",['role'=>($filter=="tri"?'button':'')])?></li>
   	</ul>
 </nav>
 
@@ -44,10 +27,15 @@
 			
 			<?=anchor("album/view/$album->albumId","{$album->albumName}")?>
 			<?php
+			echo '<div>';
 			echo '<img src="data:image/jpeg;base64,'.base64_encode($album->coverJpeg).'" />';
+			echo "</div>";
 			echo "<p>{$album->year}</p>";
 			echo "<p>{$album->artistName}</p>";
-		echo "</article>";
+			?>
+			<?=anchor("playlist/addAlbum/$album->albumId","Ajouter l'album à une playlist")?>
+			<?php
+			echo "</article>";
 	}
 
 ?>

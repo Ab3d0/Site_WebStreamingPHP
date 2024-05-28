@@ -12,20 +12,38 @@ class Album extends CI_Controller {
 		$this->load->helper('html');
 		$this->load->helper('url');
 		$this->load->helper('form');
+		
 
 		$this->load->model('model_music');
 
 		$this->choice = $this->input->get('choice') ?? 'album';
-		$this->filter = $this->input->get('filter') ?? 'all';
 		$this->numAlbum = $this->input->get('numAlbum') ?? '1';
 	}
 
 
-    public function index()
+    public function index($f='all')
 	{
-		$musics = $this->model_music->getAlbums($this->filter);
+		if(session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if(!isset($_SESSION["sort"])){
+			$_SESSION["sort"] = $f;
+		} else {
+			if($f == 'all'){
+				$_SESSION["sort"] = 'all';
+			} else if($f == 'tri'){
+				if($_SESSION["sort"] == 'triaz'){
+					$_SESSION["sort"] = "triza";
+				} else if($_SESSION["sort"] == 'triza'){
+					$_SESSION["sort"] = 'triaz';
+				} else {
+					$_SESSION["sort"] = 'triaz';
+				}
+			}
+		}
+		$musics = $this->model_music->getAlbums($_SESSION["sort"]);
 		$this->load->view('layout/header');
-		$this->load->view('albums',['albums'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
+		$this->load->view('albums',['albums'=>$musics,'filter'=>$f, 'choice'=>$this->choice]);
 		$this->load->view('layout/footer');
 	}
 

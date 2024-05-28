@@ -12,25 +12,8 @@
 </nav>
 <nav>
   	<ul>
-	  	<li><?=anchor("artiste/?filter=all",'All',['role'=>($filter=='all'?'button':'')])?></li>
-		<?php
-			if(  isset($_GET['filter']) ){
-				if( $_GET['filter'] == 'triaz'){
-					$f_proch = 'triza';
-					$f_actuel = 'triaz';
-				} else if( $_GET["filter"] == 'triza'){
-					$f_proch = 'triaz';
-					$f_actuel = 'triza';
-				} else {
-					$f_proch = 'triaz';
-					$f_actuel = 'triaz';
-				}
-			} else {
-				$f_proch = 'triaz';
-				$f_actuel = 'triaz';
-			}
-		?>
-		<li><?=anchor("artiste/?filter=$f_proch","$f_proch",['role'=>($filter=="$f_actuel"?'button':'')])?></li>
+	  	<li><?=anchor("artiste/index/all",'All',['role'=>($filter=='all'?'button':'')])?></li>
+		<li><?=anchor("artiste/index/tri","Trier",['role'=>($filter=="tri"?'button':'')])?></li>
   	</ul>
 </nav>
 

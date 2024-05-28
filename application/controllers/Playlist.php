@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Playlist extends CI_Controller {
     public $choice = 'playlist';
 	public $filter = 'all';
+	public $identifiantAlbum = 1;
 
     public function __construct()
 	{
@@ -16,6 +17,7 @@ class Playlist extends CI_Controller {
 
 		$this->choice = $this->input->get('choice') ?? 'playlist';
 		$this->filter = $this->input->get('filter') ?? 'all';
+		$this->identifiantAlbum = $this->input->get('album') ?? 1;
 	}
 
 
@@ -125,7 +127,7 @@ class Playlist extends CI_Controller {
 		/* variable = methode qui récup les sons d'une playlist */
 		$songs = $this->model_music->getSongsOfPlaylist($id);
 		$this->load->view('layout/header');
-		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice]);
+		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id]);
 		$this->load->view('layout/footer');
 	}
 
@@ -133,6 +135,72 @@ class Playlist extends CI_Controller {
 		session_start();
 		$this->model_music->destroySession();
 		redirect('playlist');
+	}
+
+	public function addAlbum($id){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
+		
+
+
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header');
+			$this->load->view('connect');
+			$this->load->view('layout/footer');
+		} else if ($this->form_validation->run() === FALSE){
+			if (session_status() === PHP_SESSION_NONE) {
+				session_start();
+			}
+			$this->load->view('layout/header');
+			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
+			$this->load->view('add_albums', ["playlists"=>$music, "idAlbum"=>$id]);
+			$this->load->view('layout/footer');
+		} else {
+			$songs = $this->model_music->getSongs($id);
+			foreach($songs as $song){
+				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $song->songId);
+			}
+			redirect("playlist/view/{$this->input->post('playlist')}");
+		}
+	}
+
+	public function addSong($id){
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
+
+
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header');
+			$this->load->view('connect');
+			$this->load->view('layout/footer');
+		} else if ($this->form_validation->run() === FALSE){
+			if (session_status() === PHP_SESSION_NONE) {
+				session_start();
+			}
+			$this->load->view('layout/header');
+			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
+			$this->load->view('add_song', ["playlists"=>$music, "idSong"=>$id]);
+			$this->load->view('layout/footer');
+		} else {
+			$this->model_music->addSongInPlaylist($this->input->post("playlist"), $id);
+			redirect("playlist/view/{$this->input->post("playlist")}");
+		}
+	}
+
+
+	public function deletePlaylist($id){
+		$songs = $this->model_music->getSongsOfPlaylist($id);
+		foreach($songs as $song){
+			$this->model_music->removeSongInPlaylist($song->id, $id);
+		}
+		$this->model_music->removePlaylist($id);
+		redirect("playlist");
+	}
+
+	public function deleteSongOfPlaylist($id){
+		$this->model_music->removeSongInPlaylist($id, $this->identifiantAlbum);
+		redirect("playlist/view/{$this->identifiantAlbum}");		
 	}
 
 

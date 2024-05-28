@@ -12,8 +12,8 @@
 </nav>
 <nav>
   	<ul>
-        <li><?=anchor("playlist", "Ajouter une musique")?></li>
-        <li><?=anchor("playlist", "Supprimer la playlist")?></li>
+        <li><?=anchor("album", "Ajouter une musique")?></li>
+        <li><?=anchor("playlist/deletePlaylist/$playlist", "Supprimer la playlist")?></li>
   	</ul>
 </nav>
 
@@ -21,9 +21,9 @@
 <?php
 	foreach($songs as $song){
 		echo "<li>";
-            echo "$song->name <br/>";
+            echo "$song->name ";
             ?>
-            <?=anchor("playlist", "Supprimer le son")?>
+            <?=anchor("playlist/deleteSongOfPlaylist/$song->id?album=$playlist", "Supprimer le son")?>
             <?php
 		echo "</li>";
 	}

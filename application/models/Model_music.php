@@ -89,7 +89,7 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongs($id){
-		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName,song.name AS songName FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
+		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName,song.name AS songName, song.id AS songId FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
 		return $query->result();
 	}
 
@@ -114,10 +114,32 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongsOfPlaylist($id){
-		$query = $this->db->query("SELECT song.name FROM playlistsong JOIN song ON playlistsong.songId = song.id WHERE playlistId = $id");
+		$query = $this->db->query("SELECT song.name, song.id FROM playlistsong JOIN song ON playlistsong.songId = song.id WHERE playlistId = $id");
 
 		return $query->result();
 	}
+
+	public function isAuth(){
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if(isset($_SESSION["user_session"])){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public function addSongInPlaylist($idPlaylist, $idSong){
+		$query = $this->db->query("INSERT INTO playlistsong (playlistId, songId) VALUES($idPlaylist, $idSong)");
+	}
+
+	public function removeSongInPlaylist($idSong, $idPlaylist){
+		$query = $this->db->query("DELETE FROM playlistsong WHERE playlistId = $idPlaylist AND songId = $idSong");
+	}
 	
+	public function removePlaylist($id){
+		$query = $this->db->query("DELETE FROM playlist WHERE id = $id");
+	}
 
 }

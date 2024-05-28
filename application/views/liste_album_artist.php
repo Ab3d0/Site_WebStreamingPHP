@@ -24,6 +24,9 @@
 			echo '<img src="data:image/jpeg;base64,'.base64_encode($song->coverJpeg).'" />';
 			echo "<p>{$song->year}</p>";
 			echo "<p>{$song->artistName}</p>";
+			?>
+			<?=anchor("playlist/addAlbum/$song->albumId","Ajouter l'album à une playlist")?>
+			<?php
 		echo "</article>";
 	}
 
