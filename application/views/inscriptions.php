@@ -1,5 +1,5 @@
 <?=validation_errors(); ?>
-<?=form_open('playlist/create')?>
+<?=form_open('playlist/create_users')?>
 <!-- Markup example 2: input is after label -->
 <label for="email">Adresse mail</label>
 <input type="email" id="email" name="email" placeholder="Email" value="<?=set_value('email')?>" required>

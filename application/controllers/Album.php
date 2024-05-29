@@ -44,7 +44,7 @@ class Album extends CI_Controller {
 				}
 			}
 		}
-		$musics = $this->model_music->getAlbums($_SESSION["sort"], $this->genre, $this->nameAlbum);
+		$musics = $this->model_music->getAlbums($this->genre, $this->nameAlbum, $_SESSION["sort"]);
 		$genres = $this->model_music->getGenres();
 		$this->load->view('layout/header');
 		$this->load->view('albums',['albums'=>$musics,'filter'=>$f, 'choice'=>$this->choice, "genres"=>$genres]);

@@ -49,8 +49,30 @@ class Artiste extends CI_Controller {
 	public function view($id){
 		$musics = $this->model_music->getAlbumsArtistes($id);
 		$this->load->view('layout/header');
-		$this->load->view('liste_album_artist',['songs'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
+		$this->load->view('liste_album_artist',['songs'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice, 'idArtist'=>$id]);
 		$this->load->view('layout/footer');
+	}
+
+	public function addAllSong($id){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
+
+		if ($this->form_validation->run() === FALSE){
+			if (session_status() === PHP_SESSION_NONE) {
+				session_start();
+			}
+			$this->load->view('layout/header');
+			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
+			$this->load->view('add_all_song', ['playlists'=>$music, 'idArtist'=>$id]);
+			$this->load->view('layout/footer');
+		} else {
+			$songs = $this->model_music->getAllSongOfArtist($id);
+			foreach($songs as $song){
+				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $song->songId);
+			}
+			redirect("playlist/view/{$this->input->post("playlist")}");
+		}
+
 	}
 
 

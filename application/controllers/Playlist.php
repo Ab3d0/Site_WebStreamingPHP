@@ -43,33 +43,6 @@ class Playlist extends CI_Controller {
 		$this->load->view('inscriptions.php');
 		$this->load->view('layout/footer');
 	}
-	
-
-	public function create(){
-		$password = $this->input->post('password');
-		$cpassword = $this->input->post('cpassword');
-		$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-		$email = $this->input->post('email');
-
-
-		/* Fonction qui vérifie si l'email n'est pas déjà utiliser */
-		if($password != $cpassword){
-			$this->load->view('layout/header');
-			$this->load->view('inscriptions');
-			echo "Le mot de passe n'est pas identique";
-			$this->load->view('layout/footer');
-		} else if($this->model_music->emailExists($email) == 1) {
-			$this->load->view('layout/header');
-			$this->load->view('inscriptions');
-			echo "L'email est déjà utiliser";
-			$this->load->view('layout/footer');
-		} else {
-			$this->model_music->addUser($email, $hashedPassword);
-			$this->load->view('layout/header');
-			$this->load->view("connect.php");
-			$this->load->view('layout/footer');
-		}
-	}
 
 
 	public function auth(){
@@ -96,9 +69,37 @@ class Playlist extends CI_Controller {
 	}
 
 	public function create_users(){
-		$this->load->view('layout/header');
-		$this->load->view('inscriptions');
-		$this->load->view('layout/footer');
+
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('email', 'Adresse mail', 'valid_email');
+		$this->form_validation->set_rules('password', 'current password', 'min_length[5]|required');
+		$this->form_validation->set_rules('cpassword', 'confirm password', 'required|matches[password]');
+
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view('layout/header');
+			$this->load->view('inscriptions');
+			$this->load->view('layout/footer');
+		} else {
+			$password = $this->input->post('password');
+			$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+			$email = $this->input->post('email');
+			if($this->model_music->emailExists($email) == 1){
+				$this->load->view('layout/header');
+				echo "l'email est déjà utiliser";
+				$this->load->view("inscriptions");
+				$this->load->view('layout/footer');
+			} else {
+				$this->model_music->addUser($email, $hashedPassword);
+				$this->load->view('layout/header');
+				$this->load->view("connect.php");
+				$this->load->view('layout/footer');
+			}
+		}
+
+
+
+
+		
 	}
 
 
@@ -203,6 +204,32 @@ class Playlist extends CI_Controller {
 		redirect("playlist/view/{$this->identifiantAlbum}");		
 	}
 
+
+	public function generatePlaylist(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
+		$this->form_validation->set_rules('name', 'Nom', 'required');
+
+
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view('layout/header');
+			$this->load->view('generate_playlist');
+			$this->load->view('layout/footer');
+		} else {
+			session_start();
+			$idUser = $this->model_music->getIdUser($_SESSION['user_session']);
+			$this->model_music->addPlaylist($idUser, $this->input->post("name"));
+			$num = $this->input->post("nombre");
+			$idPlaylist = $this->model_music->getIdPlaylist($this->input->post("name"));
+			for($i = 0; $i < $num; $i++){
+				$son = rand(1, 4403);
+				/* Ajoute la chanson $son dans playlist */
+				$this->model_music->addSongInPlaylist($idPlaylist, $son);
+			}
+
+			redirect("playlist/view/$idPlaylist");
+		}
+	}
 
 
 

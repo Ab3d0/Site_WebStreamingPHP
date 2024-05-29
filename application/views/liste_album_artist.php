@@ -11,6 +11,12 @@
 	</ul>
 </nav>
 
+<nav>
+	<ul>
+		<li><?=anchor("artiste/addAllSong/$idArtist",'Ajouter toutes les chansons à une playlist')?></li>
+	</ul>
+</nav>
+
 
 
 <section>

@@ -7,7 +7,7 @@ class Model_music extends CI_Model {
 		$this->load->database();
 	}
 
-    public function getAlbums($filter='all', $genre, $name)
+    public function getAlbums($genre, $name, $filter='all')
 	{
 		if($genre == 'none' && $name == 'none'){
 			if ($filter == 'all')
@@ -157,5 +157,23 @@ class Model_music extends CI_Model {
 		return $query->result();
 
 	}
+
+	public function getIdPlaylist($name){
+		$query = $this->db->query("SELECT id FROM playlist WHERE name = '$name'");
+
+		$res = $query->result();
+		foreach($res as $row){
+			$id = $row->id;
+		}
+
+		return $id;
+	}
+
+	public function getAllSongOfArtist($id){
+		$query = $this->db->query("SELECT DISTINCT song.name AS songName, song.id AS songId FROM album JOIN track ON track.albumId = album.id JOIN song ON song.id = track.songId WHERE album.artistId = $id");
+
+		return $query->result();
+	}
+
 
 }
