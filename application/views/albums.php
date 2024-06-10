@@ -1,73 +1,39 @@
 <article>
 <header>
-<nav>
-  <ul>
-	<li><strong>Music App</strong></li>
-  </ul>
-	<ul>
-		<li><?=anchor("album",'Albums',['role'=>($choice=='album'?'button':'')])?></li>
-		<li><?=anchor("artiste",'Artistes',['role'=>($choice=='artiste'?'button':'')])?></li>
-		<li><?=anchor("playlist",'Playlists',['role'=>($choice=='playlist'?'button':'')])?></li>
-	</ul>
-</nav>
-<nav>
-  	<ul>
-	  	<li><?=anchor("album/index/all",'All',['role'=>($filter=='all'?'button':'')])?></li>
-		<li><?=anchor("album/index/tri","Trier",['role'=>($filter=="tri"?'button':'')])?></li>
-  	</ul>
-</nav>
-<nav>
-	<ul>
-		<form action="">
-			<input type="text" id="name-album" name="name" placeholder="Rechercher" value="<?=set_value('name')?>" required>
-			<button type='submit'>Rechercher un album</button>
-		</form>
-		<form action="">
-		<select name="genre" id="genre-select">
-			<?php
-				foreach($genres as $genre){
-					echo "<option value='$genre->id'>$genre->name</option>";
-				}
-				echo "</select>";
-				echo "<button type='submit'>Rechercher un genre</button>";
-			?>
-		</form>
-	</ul>
 
-</nav>
+<div>
+	<nav class="navigationFilter">
+		<ul id="filterOptions">
+			<li class="buttonMain"><?=anchor("album/index/all",'All',['role'=>($filter=='all'?'button':'')])?></li>
+			<li class="buttonMain"><?=anchor("album/index/tri","Trier",['role'=>($filter=="tri"?'button':'')])?></li>
+		</ul>
+		<ul id="searchOptions">
+			<form action="">
+				<input type="text" id="name-album" name="name" placeholder="Rechercher un album" autocomplete="given-name" value="<?=set_value('name')?>" required>
+			</form>
+			<form action="">
+				<select name="genre" id="genre-select">
+				<?php
+					foreach($genres as $genre){
+						echo "<option value='$genre->id'>$genre->name</option>";
+					}
+					echo "</select>";
+					echo "<button type='submit' class='filterButton'>Rechercher un genre</button>";
+				?>
+			</form>
+		<ul>
+	</nav>
+</div>
 
-
-
-<section>
+<section class="listAlbums">
 <?php
 	foreach($albums as $album){
-		echo "<article>";
-			?>
-			
-			<?=anchor("album/view/$album->albumId","{$album->albumName}")?>
-			<?php
-			echo '<div>';
+		echo "<article class='album'>";
+			echo anchor("album/view/$album->albumId", "{$album->albumName}", ["class"=>'titreAlbum']);
 			echo '<img src="data:image/jpeg;base64,'.base64_encode($album->coverJpeg).'" />';
-			echo "</div>";
-			echo "<p>{$album->year}</p>";
-			echo "<p>{$album->artistName}</p>";
-			?>
-			<?=anchor("playlist/addAlbum/$album->albumId","Ajouter l'album à une playlist")?>
-			<?php
-			echo "</article>";
+            echo "<p class='titre_nameArtiste'>$album->year - $album->artistName</p>";
+			echo anchor("playlist/addAlbum/$album->albumId","Ajouter l'album à une playlist", ["class"=>'addAlbum']);
+        echo "</article>";
 	}
-
 ?>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-  </article>

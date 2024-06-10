@@ -1,0 +1,405 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    overflow-x: hidden; /* Cache le débordement horizontal */
+}
+
+.navigation h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+    font-family: montserrat;
+    width: 150px;
+    height: 70px;
+    position: absolute;
+    right: 88%;
+    top: 15%;
+    
+}
+
+
+.navigation {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #010127;
+    width: 100%;
+    height: 90px;
+    border-bottom: 1px solid white;
+    z-index: 100;
+}
+
+#mainNav {
+    display: flex;
+    list-style-type: none;
+}
+
+#mainNav li a {
+    padding: 0px 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: montserrat;
+}
+
+#mainNav li a:hover {
+    color: red;
+    transition: color 1s;
+}
+
+#signNav {
+    position: absolute;
+    left: 85%;
+    display: flex;
+    list-style-type: none;
+}
+
+#signNav li a {
+    padding: 0px 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: montserrat;
+}
+
+#signNav li a:hover {
+    color: red;
+    transition: color 1s;
+}
+
+
+.navigationFilter {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #010127;
+    width: 100%;
+    height: 90px;
+    border-bottom: 1px solid white;
+    z-index: 100;
+}
+
+#filterOptions {
+    position: absolute;
+    left: 3%;
+    display: flex;
+    list-style-type: none;
+}
+
+#filterOptions li a {
+    padding: 0px 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: montserrat;
+}
+
+#filterOptions li a:hover {
+    color: red;
+    transition: color 1s;
+}
+
+#searchOptions {
+    position: absolute;
+    left: 60%;
+    display: flex;
+    list-style-type: none;
+}
+
+#searchOptions li a {
+    padding: 0px 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-family: montserrat;
+}
+
+#searchOptions li a:hover {
+    color: red;
+    transition: color 1s;
+}
+
+
+
+.album {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 225px;
+    height: 300px;
+    background-color: #010127;
+    margin: 5px 12px;
+}
+
+.album:hover {
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 5px 5px red, 5px 5px 5px red;
+    transition: all 0.2s;
+}
+
+.listAlbums {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.titreAlbum {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 100%;
+}
+
+.album > img {
+    position: relative;
+    bottom: 5px;
+    width: 180px;
+    height: 160px;
+}
+
+
+.titre_nameArtiste {
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-family: montserrat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+    color: white;
+}
+
+
+
+#artisteAlbum {
+    background-color: #010127;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 25%;
+    width: 50%;
+    height: 100px;
+    border: 1px solid white;
+}
+
+#artisteAlbum > h1 {
+    font-size: 24px;
+    color: white;
+}
+
+#trackAlbum {
+    background-color: #010127;
+    position: relative;
+    margin-left: 10%;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+#trackAlbum > .song {
+    border: 1px solid red;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+    padding: 10px;
+}
+
+#trackAlbum > .song > p {
+    display: flex;
+    justify-content: center;
+}
+
+#trackAlbum > .song > a {
+    display: flex;
+    justify-content: center;
+}
+
+#trackAlbum > .song > .trackNumber {
+    color: white;
+    width: 15%;
+    border-right: 1px dashed white;
+}
+
+#trackAlbum > .song > .trackName {
+    color: white;
+    width: 50%;
+    border-right: 1px dashed white;
+}
+
+#trackAlbum > .song > .trackDuration {
+    color: white;
+    width: 15%;
+    border-right: 1px dashed white;
+}
+
+#trackAlbum > .song > .trackAction {
+    color: red;
+    width: 15%;
+}
+
+#listArtistes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+
+.artiste {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 225px;
+    height: 150px;
+    background-color: #010127;
+    margin: 5px 12px;
+}
+
+.artiste:hover {
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 5px 5px red, 5px 5px 5px red;
+    transition: all 0.2s;
+}
+
+.artiste > .nbAlbumText {
+    margin: 5% 10%;
+    font-size: 18px;
+    color: white;
+}
+
+.artiste > .nbAlbum {
+    margin: 5% 10%;
+    font-size: 18px;
+    color: red;
+}
+
+.artiste > .nameArtiste {
+    margin: 5% 10%;
+    font-size: 18px;
+    color: red;
+}
+
+
+.userText {
+    color: red;
+}
+
+.userTextIntro {
+    color: white;
+}
+
+#userNav {
+    position: absolute;
+    left: 80%;
+    display: flex;
+    list-style-type: none;
+}
+
+#userNav > p {
+    margin-right: 4px;
+}
+
+#pageInscription {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formInscription > h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+}
+
+
+.formInscription > div {
+    margin-top: 50px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formInscription > div > label{
+    color: white;
+    margin: 10px 10px;
+}
+
+.formInscription > div > label > input {
+    color: white;
+    background-color: #010127;
+    height: 20px;
+    border: none;
+    border-bottom: 2px solid red;
+}
+
+.formInscription > div > label > select {
+    color: white;
+    background-color: #010127;
+    height: 20px;
+    border: none;
+    border-bottom: 2px solid red;
+}
+
+.formInscription {
+    background-color: #010127;
+    padding: 15px;
+}
+
+.formInscription > button {
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    left: 30%;
+    width: 40%;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    border-radius: 5px;
+}
+
+.addAlbum {
+    text-decoration: none;
+    color: red;
+    margin-bottom: 10px;
+}
+
+#name-album {
+    color: white;
+    border: none;
+    border-bottom: 1px solid red;
+    border-left: 1px solid red;
+    background-color: #010127;
+    margin-right: 40px;
+}
+
+#name-artiste {
+    color: white;
+    border: none;
+    border-bottom: 1px solid red;
+    border-left: 1px solid red;
+    background-color: #010127;
+    margin-right: 40px;
+}
+
+.filterButton {
+    background-color: red;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: 5px;
+}

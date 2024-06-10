@@ -1,18 +1,20 @@
 <article>
 <header>
 
-
 <?=validation_errors(); ?>
-<?=form_open("artiste/addAllSong/$idArtist")?>
-  <!-- Grid -->
-  	<div class="grid">
+<main id="pageInscription">
+<?=form_open("artiste/addAllSong/$idArtist", ["class"=>"formInscription"])?>
+
+<h1>Ajouter tous les sons</h1>
+
+<div>
 
   	<label for="playlist-select">Choisissez la playlist</label>
 
 	<select name="playlist" id="playlist-select">
 		<?php
 			foreach($playlists as $playlist){
-				echo "<option value='$playlist->id'>$playlist->name</option>";
+				echo "<option value='$playlist->playlistId'>$playlist->playlistName</option>";
 			}
 		?>
 	</select>
@@ -22,10 +24,6 @@
 	?>
   
 </form>
-
-
-
-
-
-
 </article>
+
+		</main>

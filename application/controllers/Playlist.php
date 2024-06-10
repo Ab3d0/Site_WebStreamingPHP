@@ -28,18 +28,18 @@ class Playlist extends CI_Controller {
 		}
 		if(isset($_SESSION["user_session"])){
 			$musics = $this->model_music->getPlaylists($_SESSION["user_session"], $this->filter);
-			$this->load->view('layout/header');
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
 			$this->load->view('playlists',['playlists'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice]);
 			$this->load->view('layout/footer');
 		} else {
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view('connect');
 			$this->load->view('layout/footer');
 		}
 	}
 
 	public function pageI(){
-		$this->load->view('layout/header');
+		$this->load->view('layout/header', ["choice"=>$this->choice]);
 		$this->load->view('inscriptions.php');
 		$this->load->view('layout/footer');
 	}
@@ -47,21 +47,21 @@ class Playlist extends CI_Controller {
 
 	public function auth(){
 		session_start();
-		$email = $this->input->post('email');
+		$email = $this->input->post('Mail');
 		$_SESSION['user_session'] = "$email";
 
 		
 		if($this->model_music->emailExists($email) != 1){
 			$this->model_music->destroySession();
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view("connect");
 			echo "L'adresse mail ou le mot de passe est incorrect.";
 			$this->load->view('layout/footer');
-		} else if(password_verify($this->input->post("password"), $this->model_music->getHashedPassword($email))){
+		} else if(password_verify($this->input->post("Pwd"), $this->model_music->getHashedPassword($email))){
 			$this->index();
 		} else {
 			$this->model_music->destroySession();
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view('connect');
 			echo "L'adresse mail ou le mot de passe est incorrect.";
 			$this->load->view('layout/footer');
@@ -71,26 +71,26 @@ class Playlist extends CI_Controller {
 	public function create_users(){
 
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules('email', 'Adresse mail', 'valid_email');
-		$this->form_validation->set_rules('password', 'current password', 'min_length[5]|required');
-		$this->form_validation->set_rules('cpassword', 'confirm password', 'required|matches[password]');
+		$this->form_validation->set_rules('Email', 'Adresse mail', 'valid_email');
+		$this->form_validation->set_rules('Password', 'current password', 'min_length[5]|required');
+		$this->form_validation->set_rules('Cpwd', 'confirm password', 'required|matches[Password]');
 
 		if ($this->form_validation->run() === FALSE){
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view('inscriptions');
 			$this->load->view('layout/footer');
 		} else {
-			$password = $this->input->post('password');
+			$password = $this->input->post('Password');
 			$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-			$email = $this->input->post('email');
+			$email = $this->input->post('Email');
 			if($this->model_music->emailExists($email) == 1){
-				$this->load->view('layout/header');
+				$this->load->view('layout/header', ["choice"=>$this->choice]);
 				echo "l'email est déjà utiliser";
 				$this->load->view("inscriptions");
 				$this->load->view('layout/footer');
 			} else {
 				$this->model_music->addUser($email, $hashedPassword);
-				$this->load->view('layout/header');
+				$this->load->view('layout/header', ["choice"=>$this->choice]);
 				$this->load->view("connect.php");
 				$this->load->view('layout/footer');
 			}
@@ -108,13 +108,14 @@ class Playlist extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('name', 'Nom', 'required');
 
-
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
 		if ($this->form_validation->run() === FALSE){
-			$this->load->view('layout/header');
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
 			$this->load->view('create_playlist');
 			$this->load->view('layout/footer');
 		} else {
-			session_start();
 			$idUser = $this->model_music->getIdUser($_SESSION['user_session']);
 			/* fonction qui ajoute dans la bdd la playlist vide */
 			$this->model_music->addPlaylist($idUser, $this->input->post("name"));
@@ -127,8 +128,12 @@ class Playlist extends CI_Controller {
 	public function view($id){
 		/* variable = methode qui récup les sons d'une playlist */
 		$songs = $this->model_music->getSongsOfPlaylist($id);
-		$this->load->view('layout/header');
-		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id]);
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
+		$name = $this->model_music->getNameOfPlaylist($id);
+		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id, "user"=>$_SESSION['user_session'], "nameP"=>$name]);
 		$this->load->view('layout/footer');
 	}
 
@@ -141,50 +146,49 @@ class Playlist extends CI_Controller {
 	public function addAlbum($id){
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
-		
 
-
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
 		if($this->model_music->isAuth() == false){
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view('connect');
 			$this->load->view('layout/footer');
 		} else if ($this->form_validation->run() === FALSE){
-			if (session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
-			$this->load->view('layout/header');
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
 			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
 			$this->load->view('add_albums', ["playlists"=>$music, "idAlbum"=>$id]);
 			$this->load->view('layout/footer');
 		} else {
 			$songs = $this->model_music->getSongs($id);
 			foreach($songs as $song){
-				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $song->songId);
+				$trackId = $this->model_music->getTrackId($id, $song->songId);
+				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $trackId);
 			}
 			redirect("playlist/view/{$this->input->post('playlist')}");
 		}
 	}
 
 	public function addSong($id){
-
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
 
-
+		
 		if($this->model_music->isAuth() == false){
-			$this->load->view('layout/header');
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
 			$this->load->view('connect');
 			$this->load->view('layout/footer');
 		} else if ($this->form_validation->run() === FALSE){
-			if (session_status() === PHP_SESSION_NONE) {
-				session_start();
-			}
-			$this->load->view('layout/header');
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
 			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
-			$this->load->view('add_song', ["playlists"=>$music, "idSong"=>$id]);
+			$this->load->view('add_song', ["playlists"=>$music, "idSong"=>$id, "idAlbum"=>$this->identifiantAlbum]);
 			$this->load->view('layout/footer');
 		} else {
-			$this->model_music->addSongInPlaylist($this->input->post("playlist"), $id);
+			$trackId = $this->model_music->getTrackId($this->identifiantAlbum, $id);
+			$this->model_music->addSongInPlaylist($this->input->post("playlist"), $trackId);
 			redirect("playlist/view/{$this->input->post("playlist")}");
 		}
 	}
@@ -210,13 +214,14 @@ class Playlist extends CI_Controller {
 		$this->form_validation->set_rules('nombre', 'Nombre', 'required');
 		$this->form_validation->set_rules('name', 'Nom', 'required');
 
-
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
 		if ($this->form_validation->run() === FALSE){
-			$this->load->view('layout/header');
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
 			$this->load->view('generate_playlist');
 			$this->load->view('layout/footer');
 		} else {
-			session_start();
 			$idUser = $this->model_music->getIdUser($_SESSION['user_session']);
 			$this->model_music->addPlaylist($idUser, $this->input->post("name"));
 			$num = $this->input->post("nombre");

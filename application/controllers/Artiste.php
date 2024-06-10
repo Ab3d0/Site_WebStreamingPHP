@@ -5,6 +5,7 @@ class Artiste extends CI_Controller {
     public $choice = 'artiste';
 	public $filter = 'all';
 	public $numArtiste = '1';
+	public $nameArtiste = 'none';
 
     public function __construct()
 	{
@@ -17,6 +18,7 @@ class Artiste extends CI_Controller {
 
 		$this->choice = $this->input->get('choice') ?? 'artiste';
 		$this->numArtiste = $this->input->get('numArtiste') ?? '1';
+		$this->nameArtiste = $this->input->get("name") ?? 'none';
 	}
 
 
@@ -40,15 +42,26 @@ class Artiste extends CI_Controller {
 				}
 			}
 		}
-		$musics = $this->model_music->getArtistes($_SESSION["sort"]);
-		$this->load->view('layout/header');
+		$musics = $this->model_music->getArtistes($this->nameArtiste, $_SESSION["sort"]);
+		if(isset($_SESSION["user_session"])){
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+		} else {
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+		}
 		$this->load->view('artistes',['artistes'=>$musics,'filter'=>$f, 'choice'=>$this->choice]);
 		$this->load->view('layout/footer');
 	}
 
 	public function view($id){
 		$musics = $this->model_music->getAlbumsArtistes($id);
-		$this->load->view('layout/header');
+		if(session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if(isset($_SESSION["user_session"])){
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+		} else {
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+		}
 		$this->load->view('liste_album_artist',['songs'=>$musics,'filter'=>$this->filter, 'choice'=>$this->choice, 'idArtist'=>$id]);
 		$this->load->view('layout/footer');
 	}
@@ -61,14 +74,20 @@ class Artiste extends CI_Controller {
 			if (session_status() === PHP_SESSION_NONE) {
 				session_start();
 			}
-			$this->load->view('layout/header');
-			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
-			$this->load->view('add_all_song', ['playlists'=>$music, 'idArtist'=>$id]);
-			$this->load->view('layout/footer');
+			if(isset($_SESSION["user_session"])){
+				$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
+				$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+				$this->load->view('add_all_song', ['playlists'=>$music, 'idArtist'=>$id]);
+				$this->load->view('layout/footer');
+			} else {
+				$this->load->view('layout/header', ["choice"=>$this->choice]);
+				$this->load->view('connect');
+				$this->load->view('layout/footer');
+			}
 		} else {
 			$songs = $this->model_music->getAllSongOfArtist($id);
 			foreach($songs as $song){
-				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $song->songId);
+				$this->model_music->addSongInPlaylist($this->input->post("playlist"), $song->id);
 			}
 			redirect("playlist/view/{$this->input->post("playlist")}");
 		}

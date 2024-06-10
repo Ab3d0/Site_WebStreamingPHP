@@ -19,7 +19,7 @@ class Model_music extends CI_Model {
 		} else if($genre != 'none'){
 			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.genreId = $genre");
 		} else if($name != 'none'){
-			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.name = '$name'");
+			$query = $this->db->query("SELECT album.id AS albumId,album.name AS albumName, album.year,artist.id AS artistId,artist.name AS artistName,cover.jpeg AS coverJpeg FROM `album` JOIN artist ON artist.id = album.artistid JOIN cover ON cover.id = album.coverid WHERE album.name LIKE '%$name%'");
 		}
 
 
@@ -28,14 +28,19 @@ class Model_music extends CI_Model {
 		return $query->result();
 	}
 
-	public function getArtistes($filter='all')
+	public function getArtistes($name, $filter='all')
 	{
-		if ($filter == 'all')
-			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name");
-		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name ASC");
-		if ($filter == 'triza')
-			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name DESC");
+		if($name == 'none'){
+			if ($filter == 'all')
+				$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name");
+			if ($filter == 'triaz')
+				$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name ASC");
+			if ($filter == 'triza')
+				$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId GROUP BY artist.id, artist.name ORDER BY name DESC");
+		} else if($name != 'none') {
+			$query = $this->db->query("SELECT artist.id, artist.name, COUNT(album.id) AS nombre_albums FROM artist LEFT JOIN album ON artist.id = album.artistId WHERE artist.name LIKE '%$name%' GROUP BY artist.id, artist.name ");
+		}
+
 
 		return $query->result();
 	}
@@ -43,11 +48,11 @@ class Model_music extends CI_Model {
 	public function getPlaylists($email, $filter='all')
 	{
 		if ($filter == 'all')
-			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email'");
+			$query = $this->db->query("SELECT playlist.id AS playlistId, playlist.name AS playlistName, COUNT(playlistsong.songid) AS songCount FROM user JOIN playlist ON user.id = playlist.userid LEFT JOIN playlistsong ON playlist.id = playlistsong.playlistid  WHERE user.email = '$email' GROUP BY playlist.id, playlist.name");
 		if ($filter == 'triaz')
-			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email' ORDER BY name ASC");
+			$query = $this->db->query("SELECT playlist.id AS playlistId, playlist.name AS playlistName, COUNT(playlistsong.songid) AS songCount FROM user JOIN playlist ON user.id = playlist.userid LEFT JOIN playlistsong ON playlist.id = playlistsong.playlistid  WHERE user.email = '$email' GROUP BY playlist.id, playlist.name ORDER BY playlistName ASC");
 		if ($filter == 'triza')
-			$query = $this->db->query("SELECT playlist.id, playlist.name FROM playlist JOIN user ON user.id = playlist.userid WHERE user.email = '$email' ORDER BY name DESC");
+			$query = $this->db->query("SELECT playlist.id AS playlistId, playlist.name AS playlistName, COUNT(playlistsong.songid) AS songCount FROM user JOIN playlist ON user.id = playlist.userid LEFT JOIN playlistsong ON playlist.id = playlistsong.playlistid  WHERE user.email = '$email' GROUP BY playlist.id, playlist.name ORDER BY playlistName DESC");
 
 		return $query->result();
 	}
@@ -98,7 +103,7 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongs($id){
-		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName,song.name AS songName, song.id AS songId FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
+		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName, artist.id AS artistId, song.name AS songName, song.id AS songId FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
 		return $query->result();
 	}
 
@@ -123,7 +128,7 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongsOfPlaylist($id){
-		$query = $this->db->query("SELECT song.name, song.id FROM playlistsong JOIN song ON playlistsong.songId = song.id WHERE playlistId = $id");
+		$query = $this->db->query("SELECT track.number, track.duration, song.name, track.id FROM playlistsong JOIN track ON track.id = playlistsong.songId JOIN song ON song.id = track.songId WHERE playlistId = $id");
 
 		return $query->result();
 	}
@@ -169,10 +174,32 @@ class Model_music extends CI_Model {
 		return $id;
 	}
 
+	public function getNameOfPlaylist($id){
+		$query = $this->db->query("SELECT name FROM playlist WHERE id = $id");
+
+		$res = $query->result();
+		foreach($res as $row){
+			$id = $row->name;
+		}
+
+		return $id;
+	}
+
 	public function getAllSongOfArtist($id){
-		$query = $this->db->query("SELECT DISTINCT song.name AS songName, song.id AS songId FROM album JOIN track ON track.albumId = album.id JOIN song ON song.id = track.songId WHERE album.artistId = $id");
+		$query = $this->db->query("SELECT DISTINCT track.id FROM album JOIN track ON track.albumId = album.id JOIN song ON song.id = track.songId WHERE album.artistId = $id");
 
 		return $query->result();
+	}
+
+	public function getTrackId($album, $song){
+		$query = $this->db->query("SELECT track.id FROM track WHERE track.albumId = $album AND track.songId = $song");
+
+		$res = $query->result();
+		foreach($res as $row){
+			$track = $row->id;
+		}
+
+		return $track;
 	}
 
 

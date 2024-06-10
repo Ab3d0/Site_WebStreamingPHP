@@ -46,7 +46,11 @@ class Album extends CI_Controller {
 		}
 		$musics = $this->model_music->getAlbums($this->genre, $this->nameAlbum, $_SESSION["sort"]);
 		$genres = $this->model_music->getGenres();
-		$this->load->view('layout/header');
+		if(isset($_SESSION["user_session"])){
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+		} else {
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+		}
 		$this->load->view('albums',['albums'=>$musics,'filter'=>$f, 'choice'=>$this->choice, "genres"=>$genres]);
 		$this->load->view('layout/footer');
 	}
@@ -54,8 +58,23 @@ class Album extends CI_Controller {
 
 	public function view($id){
 		$musics = $this->model_music->getSongs($id);
-		$this->load->view('layout/header');
-		$this->load->view('track',['albums'=>$musics, 'choice'=>$this->choice]);
+		$name = 'none';
+		foreach($musics as $song){
+			if($name == 'none'){
+				$name = $song->artistName;
+				$nameAlbum = $song->albumName;
+				$idArtist = $song->artistId;
+			}
+		}
+		if(session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if(isset($_SESSION["user_session"])){
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+		} else {
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+		}
+		$this->load->view('track',['albums'=>$musics, 'choice'=>$this->choice, "nomArtiste"=>$name, "nomAlbum"=>$nameAlbum, "idArtiste"=>$idArtist, "idAlbum"=>$id]);
 		$this->load->view('layout/footer');
 	}
 

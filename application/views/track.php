@@ -1,32 +1,29 @@
 <article>
 <header>
-<nav>
-  <ul>
-	<li><strong>Music App</strong></li>
-  </ul>
-	<ul>
-		<li><?=anchor("album/",'Albums',['role'=>($choice=='album'?'button':'')])?></li>
-		<li><?=anchor("artiste/",'Artistes',['role'=>($choice=='artiste'?'button':'')])?></li>
-		<li><?=anchor("playlist/",'Playlists',['role'=>($choice=='playlist'?'button':'')])?></li>
-	</ul>
-</nav>
 
 
-<section>
+<section id="artisteAlbum">
+	<?php
+		echo "<h1>";
+		echo anchor("artiste/view/$idArtiste", "$nomArtiste"); 
+		echo " - $nomAlbum</h1>";
+	?>
+</section>
+
+
+
+<section id="trackAlbum">
 <?php
-    
-
 	foreach($albums as $album){
-		echo "<li>";
-            echo "$album->songName";
-		?>
-			<?=anchor("playlist/addSong/$album->songId",'Ajouter le son')?>
-		<?php
-		echo "</li>";
+		echo "<article class='song'>";
+			echo "<p class='trackNumber'>$album->number</p>";
+			echo "<p class='trackName'>$album->songName</p>";
+			echo "<p class='trackDuration'>";
+			echo gmdate("H:i:s", $album->duration); 
+			echo "</p>";
+			echo anchor("playlist/addSong/$album->songId?album=$idAlbum",'Ajouter le son', ["class"=>'trackAction']);
+		echo "</article>";
 	}
 
 ?>
 </section>
-
-
-</article>

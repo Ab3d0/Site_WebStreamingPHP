@@ -1,8 +1,11 @@
-<?=validation_errors(); ?>
-<?=form_open('playlist/generatePlaylist')?>
-  <!-- Grid -->
-  <div class="grid">
 
+<?=validation_errors(); ?>
+<main id="pageInscription">
+<?=form_open('playlist/generatePlaylist', ["class"=>"formInscription"])?>
+
+<h1>Générer une playlist</h1>
+
+  <div>
 	<!-- Markup example 1: input is inside label -->
 	<label for="nombre">
 	Nombre de musique
@@ -15,3 +18,5 @@
   </div>
   <button type="submit">Submit</button>
 </form>
+
+</main>
