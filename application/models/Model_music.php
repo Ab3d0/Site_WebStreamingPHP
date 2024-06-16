@@ -103,7 +103,12 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongs($id){
-		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName, artist.id AS artistId, song.name AS songName, song.id AS songId FROM track JOIN album ON album.id = track.albumid JOIN artist ON artist.id = album.artistid JOIN song ON song.id = track.songid WHERE albumid = $id ORDER BY number ASC");
+		$query = $this->db->query("SELECT track.number,track.duration,album.name AS albumName,artist.name AS artistName, artist.id AS artistId, song.name AS songName, song.id AS songId 
+		FROM track 
+		JOIN album ON album.id = track.albumid 
+		JOIN artist ON artist.id = album.artistid 
+		JOIN song ON song.id = track.songid 
+		WHERE albumid = $id ORDER BY number ASC");
 		return $query->result();
 	}
 
@@ -201,6 +206,4 @@ class Model_music extends CI_Model {
 
 		return $track;
 	}
-
-
 }

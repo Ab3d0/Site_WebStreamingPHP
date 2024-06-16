@@ -9,7 +9,7 @@
 	<!-- Markup example 1: input is inside label -->
 	<label for="nombre">
 	Nombre de musique
-	<input type="number" id="nombre" name="nombre" placeholder="Indiquez le nombre de musique" value="<?=set_value('nombre')?>" required>
+	<input type="number" id="nombre" name="nombre" min="0" max="1000" placeholder="musique" value="<?=set_value('nombre')?>" required>
 	</label>
     <label for="name">
 	Nom

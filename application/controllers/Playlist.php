@@ -236,6 +236,37 @@ class Playlist extends CI_Controller {
 		}
 	}
 
+	public function duplicate(){
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('playlist', 'Playlist', 'required');
+		$this->form_validation->set_rules('name', 'Nom', 'required');
+
+		if (session_status() === PHP_SESSION_NONE) {
+			session_start();
+		}
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+			$this->load->view('duplicate');
+			$this->load->view('layout/footer');
+		} else if ($this->form_validation->run() === FALSE){
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
+			$music = $this->model_music->getPlaylists($_SESSION["user_session"]);
+			$this->load->view('duplicate', ["playlists"=>$music]);
+			$this->load->view('layout/footer');
+		} else {
+			$songs = $this->model_music->getSongsOfPlaylist($this->input->post("playlist"));
+			$idUser = $this->model_music->getIdUser($_SESSION['user_session']);
+			$this->model_music->addPlaylist($idUser, $this->input->post("name"));
+			$idP = $this->model_music->getIdPlaylist($this->input->post("name"));
+			foreach($songs as $song){
+				/*$trackId = $this->model_music->getTrackId($id, $song->songId);*/
+				$this->model_music->addSongInPlaylist($idP, $song->id);
+			}
+			redirect("playlist/view/$idP");
+		}
+	}
+
+
 
 
 

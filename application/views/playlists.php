@@ -7,6 +7,7 @@
 		<ul id="filterOptions">
 			<li><?=anchor("playlist/createPlaylist",'Créer une playlist')?></li>
 			<li><?=anchor("playlist/generatePlaylist",'Générer une playlist')?></li>
+			<li><?=anchor("playlist/duplicate",'Dupliquer une playlist')?></li>
 			<li><?=anchor("playlist/deconnect",'Se deconnecter')?></li>
 		</ul>
 	</nav>
