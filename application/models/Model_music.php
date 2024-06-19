@@ -133,7 +133,7 @@ class Model_music extends CI_Model {
 	}
 
 	public function getSongsOfPlaylist($id){
-		$query = $this->db->query("SELECT track.number, track.duration, song.name, track.id FROM playlistsong JOIN track ON track.id = playlistsong.songId JOIN song ON song.id = track.songId WHERE playlistId = $id");
+		$query = $this->db->query("SELECT track.number, track.duration, song.name, track.id FROM playlistsong JOIN track ON track.id = playlistsong.songId JOIN song ON song.id = track.songId WHERE playlistId = $id ");
 
 		return $query->result();
 	}
@@ -179,15 +179,15 @@ class Model_music extends CI_Model {
 		return $id;
 	}
 
-	public function getNameOfPlaylist($id){
-		$query = $this->db->query("SELECT name FROM playlist WHERE id = $id");
+	public function getNameOfPlaylist($id, $user){
+		$query = $this->db->query("SELECT name FROM playlist WHERE id = $id AND userid = $user");
 
 		$res = $query->result();
 		foreach($res as $row){
-			$id = $row->name;
+			$ide = $row->name;
 		}
 
-		return $id;
+		return $ide;
 	}
 
 	public function getAllSongOfArtist($id){

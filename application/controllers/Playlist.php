@@ -111,7 +111,11 @@ class Playlist extends CI_Controller {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		if ($this->form_validation->run() === FALSE){
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+			$this->load->view('connect');
+			$this->load->view('layout/footer');
+		} else if ($this->form_validation->run() === FALSE){
 			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
 			$this->load->view('create_playlist');
 			$this->load->view('layout/footer');
@@ -127,7 +131,7 @@ class Playlist extends CI_Controller {
 
 	public function view($id){
 		/* variable = methode qui récup les sons d'une playlist */
-		$songs = $this->model_music->getSongsOfPlaylist($id);
+		
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
@@ -136,10 +140,16 @@ class Playlist extends CI_Controller {
 			$this->load->view('connect');
 			$this->load->view('layout/footer');
 		} else {
+			$idUser = $this->model_music->getIdUser($_SESSION["user_session"]);
 			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
-			$name = $this->model_music->getNameOfPlaylist($id);
-			$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id, "user"=>$_SESSION['user_session'], "nameP"=>$name]);
-			$this->load->view('layout/footer');
+			$name = $this->model_music->getNameOfPlaylist($id, $idUser);
+			if($name != null){
+				$songs = $this->model_music->getSongsOfPlaylist($id);
+				$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id, "user"=>$_SESSION['user_session'], "nameP"=>$name]);
+				$this->load->view('layout/footer');		
+			} else {
+				redirect("playlist");
+			}
 		}
 		
 	}
@@ -224,7 +234,11 @@ class Playlist extends CI_Controller {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		if ($this->form_validation->run() === FALSE){
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+			$this->load->view('connect');
+			$this->load->view('layout/footer');
+		} else if ($this->form_validation->run() === FALSE){
 			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
 			$this->load->view('generate_playlist');
 			$this->load->view('layout/footer');
@@ -253,7 +267,7 @@ class Playlist extends CI_Controller {
 		}
 		if($this->model_music->isAuth() == false){
 			$this->load->view('layout/header', ["choice"=>$this->choice]);
-			$this->load->view('duplicate');
+			$this->load->view('connect');
 			$this->load->view('layout/footer');
 		} else if ($this->form_validation->run() === FALSE){
 			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION["user_session"]]);
