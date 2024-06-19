@@ -58,7 +58,7 @@ class Playlist extends CI_Controller {
 			echo "L'adresse mail ou le mot de passe est incorrect.";
 			$this->load->view('layout/footer');
 		} else if(password_verify($this->input->post("Pwd"), $this->model_music->getHashedPassword($email))){
-			$this->index();
+			redirect("playlist");	
 		} else {
 			$this->model_music->destroySession();
 			$this->load->view('layout/header', ["choice"=>$this->choice]);
@@ -131,10 +131,17 @@ class Playlist extends CI_Controller {
 		if (session_status() === PHP_SESSION_NONE) {
 			session_start();
 		}
-		$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
-		$name = $this->model_music->getNameOfPlaylist($id);
-		$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id, "user"=>$_SESSION['user_session'], "nameP"=>$name]);
-		$this->load->view('layout/footer');
+		if($this->model_music->isAuth() == false){
+			$this->load->view('layout/header', ["choice"=>$this->choice]);
+			$this->load->view('connect');
+			$this->load->view('layout/footer');
+		} else {
+			$this->load->view('layout/header2', ["choice"=>$this->choice, "user"=>$_SESSION['user_session']]);
+			$name = $this->model_music->getNameOfPlaylist($id);
+			$this->load->view('songs_playlist', ['songs'=>$songs,'filter'=>$this->filter, 'choice'=>$this->choice, "playlist"=>$id, "user"=>$_SESSION['user_session'], "nameP"=>$name]);
+			$this->load->view('layout/footer');
+		}
+		
 	}
 
 	public function deconnect(){
